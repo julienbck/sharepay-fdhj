@@ -11,12 +11,16 @@
 
   </head>
   <body>
-    <div id="background-dashboard">
-      <div class="col-md-12">
-    <div class="row">
+    <div class="container-fluid">
+      <div class="row">
         <div class="col-sm-2" style="background-color:#1c5170">
-          <div class="logo"><img src="/image/LogoSharePayWhite.png" width="90%"/></div>
-          <nav class="navbar">
+          <div class="logo text-center"><img src="/image/LogoSharePayWhite.png" width="90%"/></div>
+              <div class="col-xs-7 mb-5 border-circle text-center">
+                <img src="//placehold.it/150" class="rounded-circle text-center" width="80%"/>
+              </div>
+
+
+          <nav class="navbar mb-5">
             <!-- Links -->
             <ul class="navbar-nav">
               <li class="nav-item">
@@ -33,9 +37,21 @@
               </li>
             </ul>
           </nav>
-      </div>
-    </div>
-</div>
+
+          <footer class="footer-navbar">
+            <i class="fa fa-eye-slash text-white px-3 py-2" aria-hidden="true"></i>
+            <i class="fa fa-cogs text-white px-5 py-2" aria-hidden="true"></i>
+            <i class="fa fa-sign-out text-white px-3 py-2" aria-hidden="true"></i>
+          </footer>
+        </div>
+
+      <div class="col-sm-10" style="background-color:#fff">
+        <div class="header-page">
+          <h3 class="text-white pl-4 pt-1">{% block titlePage %}{% endblock %}</h3>
+        </div>
+      {% block content %}{% endblock %}
+
+
     </div>
     <!-- begin navigation -->
 
@@ -44,6 +60,7 @@
     <!-- begin top bar -->
 
     <!-- End top bar-->
-    {% block content %}{% endblock %}
+  </div>
+  </div>
   </body>
 </html>
