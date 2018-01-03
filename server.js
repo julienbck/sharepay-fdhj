@@ -18,6 +18,11 @@ app.set("view engine", "njk");
 app.get("/", function(request, result) {
   result.render("home")
 });
+
+app.get("/login", function(request, result) {
+  result.render("login")
+});
+
 app.use(express.static(__dirname + "/public"));
 
 
