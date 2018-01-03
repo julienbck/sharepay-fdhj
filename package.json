@@ -23,6 +23,7 @@
   "homepage": "https://github.com/julienbck/sharepay-fdhj#readme",
   "dependencies": {
     "express": "^4.16.2",
+    "node-fetch": "^1.7.3",
     "nunjucks": "^3.0.1",
     "pg": "^7.4.0"
   }
