@@ -1,0 +1,13 @@
+body,.col-md-12,.row {
+  height: 100%;
+  width: 100%;
+}
+#background-dashboard {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+.row > div {
+  height: 100%;
+}
