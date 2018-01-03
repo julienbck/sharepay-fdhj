@@ -2,11 +2,14 @@ const express = require("express");
 const nunjucks = require("nunjucks");
 const fetch = require("node-fetch");
 const passport = require("passport");
+const shajs = require('sha.js');
+const loginRequests = require('./requests/loginRequests.js');
 const LocalStrategy = require("passport-local").Strategy;
 const pg = require("pg");
-const loginRequests = require("./requests/loginRequests.js");
 const FacebookStrategy = require("passport-facebook").Strategy;
 const FB = require("fb");
+const client = new pg.Client();
+client.connect();
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -118,20 +121,51 @@ app.get("/login", function(request, result) {
   result.render("login")
 });
 
+// app.post(
+//   "/login", passport.authenticate('local', { successRedirect: "/profile", failureRedirect: "/login" })
+// );
+app.get("/register", function(request, result) {
+  result.render("register");
+});
+
+app.post("/register",
+ function(request, result) {
+  const user = request.body;
+  //console.log(request.body);
+  client.query("SELECT email FROM users")
+  .then(dbResult => {
+    if (!dbResult.rows.some(u => u.email === user.username)) {
+      client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')]);
+    }
+    result.redirect("/login");
+  })
+  .catch(error => {
+    console.warn(error);
+    result.redirect("/register");
+  });
+});
+
+
+
+app.get("/events", function(request, result) {
+  result.render("events")
+});
 
 
 app.post(
   "/login",
   passport.authenticate("local", { failureRedirect: "/login" }),
   function(request, result) {
+    console.log("redirect to /profile");
     result.redirect("/profile");
   }
 );
 
 app.get(
   "/profile",
-  require("connect-ensure-login").ensureLoggedIn("/login"),
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
+    //console.log("toto", request.user)
     result.render("profile", {
       id: request.user.id,
       email: request.user.email
