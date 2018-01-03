@@ -1,0 +1,29 @@
+{
+  "name": "sharepayfdhj",
+  "version": "0.0.1",
+  "description": "share your expenses",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julienbck/sharepay-fdhj.git"
+  },
+  "keywords": [
+    "share",
+    "pay",
+    "expenses"
+  ],
+  "author": "Dominique, Julien, Florent, Hamid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/julienbck/sharepay-fdhj/issues"
+  },
+  "homepage": "https://github.com/julienbck/sharepay-fdhj#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "nunjucks": "^3.0.1",
+    "pg": "^7.4.0"
+  }
+}
