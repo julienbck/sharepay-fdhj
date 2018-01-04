@@ -44,8 +44,8 @@ body, html {
   width: 100%;
   left: 0;
   top: 0;
-  position: absolute;
 }
+
 .jumbotron {
   background-color: #1c5170;
   width: 30%;
@@ -66,4 +66,8 @@ text-align: center;
 .form-group {
   text-transform: uppercase;
   color: white;
+}
+
+.eventsList {
+  margin : 10px;
 }
