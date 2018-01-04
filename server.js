@@ -8,6 +8,10 @@ const pg = require("pg");
 const port = process.env.PORT || 3000;
 const app = express();
 
+
+
+const eventsRequests = require ('./requests/eventsRequests.js');
+
 app.use(require("body-parser").urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
 app.use(
@@ -38,6 +42,17 @@ app.get("/", function(request, result) {
 
 app.get("/login", function(request, result) {
   result.render("login")
+});
+
+// liste des evenements
+app.get("/events", function(request, result) {
+
+  eventsRequests.getAllEvents(
+    function(events){
+      result.render("events", {events: events })
+    }
+  );
+
 });
 
 passport.serializeUser(function(user, callback) {

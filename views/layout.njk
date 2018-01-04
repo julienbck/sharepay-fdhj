@@ -7,16 +7,18 @@
     <link rel="stylesheet" href="/css/style.sharepay.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <title>sharepay-fdhj</title>
 
   </head>
   <body>
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-2" style="background-color:#1c5170">
-          <div class="logo text-center"><img src="/image/LogoSharePayWhite.png" width="90%"/></div>
+          <div class="logo text-center"><img src="/image/LogoSharePayWhite.png" width="90%" alt="" /></div>
               <div class="col-xs-7 mb-5 border-circle text-center">
-                <img src="//placehold.it/150" class="rounded-circle text-center" width="80%"/>
+                <img src="//placehold.it/150" class="rounded-circle text-center" width="80%" alt="" />
               </div>
 
 
@@ -30,7 +32,7 @@
                 <a class="nav-link text-white" href="#"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Event</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white" href="#"><i class="fa fa-list" aria-hidden="true"></i> Events</a>
+                <a class="nav-link text-white" href="/events"><i class="fa fa-list" aria-hidden="true"></i> Events</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
@@ -47,7 +49,7 @@
 
       <div class="col-sm-10" style="background-color:#fff">
         <div class="header-page">
-          <h3 class="text-white pl-4 pt-1">{% block titlePage %}{% endblock %}</h3>
+          <h3 class="text-white pl-4 pt-1 text-center">{% block titlePage %}{% endblock %}</h3>
         </div>
       {% block content %}{% endblock %}
 
