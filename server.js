@@ -5,6 +5,8 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const pg = require("pg");
 const loginRequests = require("./requests/loginRequests.js");
+const FacebookStrategy = require("passport-facebook").Strategy;
+const FB = require("fb");
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -29,6 +31,30 @@ nunjucks.configure("views", {
   express: app
 });
 
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: process.env.REDIRECT_URI
+    },
+    function(accessToken, refreshToken, profile, callback) {
+      FB.api(
+        "me",
+        { fields: "id,name,email", access_token: accessToken },
+        function(user) {
+          findOrCreateUser(user)
+            .then(user => {
+              callback(null, user);
+            })
+            .catch(error => {
+              callback(error);
+            })
+        }
+      );
+    }
+  )
+);
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "njk");
@@ -67,8 +93,26 @@ passport.deserializeUser(function(username, callback) {
 });
 
 app.get("/", function(request, result) {
-  result.render("home")
+  result.render("home", {
+    user: request.user
+  });
 });
+
+app.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", {
+    authType: "rerequest", // rerequest is here to ask again if login was denied once,
+    scope: ["email"]
+  })
+);
+
+app.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", { failureRedirect: "/" }),
+  function(request, result) {
+    result.redirect("/profile");
+  }
+);
 
 app.get("/login", function(request, result) {
   result.render("login")
