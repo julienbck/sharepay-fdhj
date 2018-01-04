@@ -12,6 +12,10 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -19,7 +23,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 CREATE TABLE events (
-    id uuid NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     title character varying NOT NULL,
     date date NOT NULL,
     place character varying NOT NULL,
@@ -28,13 +32,13 @@ CREATE TABLE events (
 );
 
 CREATE TABLE participants (
-    id uuid NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     id_user uuid NOT NULL,
     id_event uuid NOT NULL
 );
 
 CREATE TABLE payments (
-    id uuid NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     amount integer NOT NULL,
     date date NOT NULL,
     id_participant_plus uuid,
@@ -42,13 +46,13 @@ CREATE TABLE payments (
 );
 
 CREATE TABLE recipients (
-    id uuid NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     id_spending uuid NOT NULL,
     id_participant_who_benefits uuid NOT NULL
 );
 
 CREATE TABLE spending (
-    id uuid NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     id_participant_who_spend uuid NOT NULL,
     description character varying NOT NULL,
     amount integer NOT NULL,
@@ -56,7 +60,7 @@ CREATE TABLE spending (
 );
 
 CREATE TABLE users (
-    id uuid NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     last_name character varying NOT NULL,
     first_name character varying NOT NULL,
     email character varying NOT NULL,
