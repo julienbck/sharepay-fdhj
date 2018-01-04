@@ -146,6 +146,63 @@ app.post("/register",
 });
 
 
+// modify and event
+app.get("/events/:id", function(request, result) {
+
+  if (request.params.id === "new"){
+    console.log("new");
+    result.render("eventEdit", {event: {id:"new"}, titre:"Nouveau"} );
+  } else {
+    console.log("pas new");
+    eventsRequests.getEvent(request.params.id,
+      function(event){
+        result.render("eventEdit", {event: event, titre:"Modifier"})
+      }
+    );
+  }
+
+});
+
+// post event
+app.post("/postEvent", function(request, result) {
+
+  console.log(request.body.title);
+
+  if (request.body.id === "new"){
+    eventsRequests.insertEvent(request.body,
+      function(){
+        result.redirect("/events");
+      }
+    )
+  } else {
+    eventsRequests.updateEvent(request.body,
+      function(){
+        result.redirect("/events");
+      }
+    )
+
+
+  }
+
+});
+
+
+// post addParticpant
+app.post("/addParticipant", function(request, result) {
+console.log('request.body.id ='+request.body.id);
+  eventsRequests.addParticipant(request.body.first_name, request.body.id,
+    function(){
+      result.redirect("/events/"+request.body.id);
+    }
+  );
+
+});
+
+
+passport.serializeUser(function(user, callback) {
+  return callback(null, user);
+});
+
 
 app.get("/events", function(request, result) {
   result.render("events")
