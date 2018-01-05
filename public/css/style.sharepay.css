@@ -37,6 +37,11 @@ body, html {
   height: auto;
   margin-top: -150px;
 }
+.logoregister {
+  margin: 0 auto;
+  height: auto;
+  margin-top: -9%;
+}
 
 .header-page {
   background-color:#212121;
@@ -55,6 +60,42 @@ body, html {
   transform: translate(-50%,-50%);
   align-items: center;
   padding-top: 15px;
+  box-shadow: -7px 7px 10px #000;
+}
+.text-blue {
+  color: #1c5170;
+}
+
+.btn-login-design {
+  background-color: #FFF;
+  border-radius: 10px;
+  border-style: none;
+  width: 250px;
+  height: 50px;
+  font-size: 20px;
+  font-family: arial;
+  margin: 20px;
+}
+.btn-login-design:hover{
+  background-color: #1c5170;
+  color: #FFF;
+  transition:background-color 0.3s;
+}
+.button-container{
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
+  background-color: #1c5170;
+  border-radius: 20px;
+  padding-bottom: 50px;
+  padding-top: 50px;
+  box-shadow: -7px 7px 10px #000;
+  margin-top: -100px;
+}
+.boldUppercase {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 30px;
 }
 .loginTitle {
 margin-bottom: 30px;
