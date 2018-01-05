@@ -1,0 +1,95 @@
+{% extends "layout.njk" %}
+
+
+{% block titlePage %}{{ titre }}{% endblock %}
+
+{% block content %}
+<form action="{{ route }}" method="POST">
+
+  <div class="row">
+
+
+    <div class="col-sm">
+
+      <h3 class="text-center">The event</h3>
+
+      <input type="hidden" class="form-control" name="id" value="{{ event.id }}">
+
+
+      <div class="form-group">
+        <label for="title">Title : *</label>
+        <input type="text" required class="form-control" name="title" id="title" placeholder="title" value="{{ event.title }}">
+      </div>
+
+      <div class="form-group">
+        <label for="place">Place : *</label>
+        <input type="text" required class="form-control" name="place" id="place" placeholder="place" value="{{ event.place }}">
+      </div>
+
+      <div class="form-group">
+        <label for="place">Date : *</label>
+        <input type="text" required class="form-control" name="date" id="date" placeholder="YYYY-MM-DD" value="{{ event.date }}">
+      </div>
+
+      <div class="form-group">
+        <label for="place">Status : *</label>
+        <input type="text" required class="form-control" name="status" id="status" placeholder="status" value="{{ event.status }}">
+      </div>
+
+
+
+    </div>
+
+    <div class="col-sm">
+
+
+      <h3 class="text-center">The participants</h3>
+
+      <!--
+      <form action="/addParticipant" method="POST" class="form-inline">
+
+        <input type="hidden" class="form-control" name="id" placeholder="name@example.com" value="{{ event.id }}">
+
+        <div class="form-group">
+
+          <input type="text" required class="form-control" name="first_name" id="user" placeholder="user">
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-block btn-primary">Add user</button>
+        </div>
+      </form>
+      -->
+
+      {% for user in users %}
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="{{ user.id_user }}" id="{{ user.id_user }}" name="participants[]"
+         {%if user.id_participant != null %}checked{% endif %}
+        >
+        <label class="form-check-label" for="{{ user.id_user }}">
+          {{ user.first_name }}
+        </label>
+      </div>
+      {% endfor %}
+
+    </div>
+
+
+
+  </div>
+
+  <div class="row">
+    <div class="col">
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-block btn-primary">Validate the event</button>
+    </div>
+
+  </div>
+  </div>
+
+
+</form>
+
+
+{% endblock %}
