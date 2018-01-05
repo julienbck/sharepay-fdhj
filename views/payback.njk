@@ -1,0 +1,24 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<h1>{{email}}</h1>
+
+<div>
+  <table class="table table-striped">
+<thead class="text-light bg-dark">
+  <tr>
+    <th scope="col-8">Categories</th>
+  </tr>
+</thead>
+<tbody>
+    {% for categorie in categories%}
+    <tr>
+      <td>{{categorie.label}}</a></td>
+    </tr>
+    {%endfor%}
+</tbody>
+</table>
+</div>
+
+
+{% endblock %}
