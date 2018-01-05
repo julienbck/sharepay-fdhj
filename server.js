@@ -34,9 +34,9 @@ nunjucks.configure("views", {
 passport.use(
   new FacebookStrategy(
     {
-      clientID: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: process.env.REDIRECT_URI
+      clientID: process.env.clientID,
+      clientSecret: process.env.clientSecret,
+      callbackURL: process.env.callbackURL
     },
     function(accessToken, refreshToken, profile, callback) {
       FB.api(
