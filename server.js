@@ -68,7 +68,7 @@ passport.use(
     .then(user => {
       if (user.rowCount === 0) {
         callback("User not foundt in Database")
-      } else if(user.rows[0].email === username && user.rows[0].password === password ) {
+      } else if(user.rows[0].email === username && user.rows[0].password === shajs('sha256').update(password).digest('hex') ) {
         callback(null, user.rows[0]);
       } else {
         callback("Password incorrect")//comment envoyer l'erreur
