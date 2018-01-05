@@ -135,9 +135,11 @@ app.post("/register",
   client.query("SELECT email FROM users")
   .then(dbResult => {
     if (!dbResult.rows.some(u => u.email === user.username)) {
-      client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')]);
+      client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')])
+      result.redirect("/login");
+    } else {
+      result.render("register", {error : true})
     }
-    result.redirect("/login");
   })
   .catch(error => {
     console.warn(error);
@@ -150,6 +152,7 @@ app.post("/register",
 app.get("/events", function(request, result) {
   result.render("events")
 });
+
 
 
 app.post(
