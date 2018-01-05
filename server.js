@@ -145,58 +145,69 @@ app.post("/register",
   });
 });
 
+// liste des evenements
+app.get("/events", function(request, result) {
 
-// modify and event
-app.get("/events/:id", function(request, result) {
-
-  if (request.params.id === "new"){
-    console.log("new");
-    result.render("eventEdit", {event: {id:"new"}, titre:"Nouveau"} );
-  } else {
-    console.log("pas new");
-    eventsRequests.getEvent(request.params.id,
-      function(event){
-        result.render("eventEdit", {event: event, titre:"Modifier"})
-      }
-    );
-  }
-
-});
-
-// post event
-app.post("/postEvent", function(request, result) {
-
-  console.log(request.body.title);
-
-  if (request.body.id === "new"){
-    eventsRequests.insertEvent(request.body,
-      function(){
-        result.redirect("/events");
-      }
-    )
-  } else {
-    eventsRequests.updateEvent(request.body,
-      function(){
-        result.redirect("/events");
-      }
-    )
-
-
-  }
-
-});
-
-
-// post addParticpant
-app.post("/addParticipant", function(request, result) {
-console.log('request.body.id ='+request.body.id);
-  eventsRequests.addParticipant(request.body.first_name, request.body.id,
-    function(){
-      result.redirect("/events/"+request.body.id);
+  eventsRequests.getAllEvents(
+    function(events){
+      result.render("events", {events: events })
     }
   );
 
 });
+
+
+// GET new event
+app.get("/events/new", function(request, result) {
+
+  eventsRequests.getEvent(request.params.id,
+    function(event, users){
+      result.render("eventEdit", {event: event, users:users, titre:"Créer", route:"/events/new"})
+    }
+  )
+});
+
+// post new event
+app.post("/events/new", function(request, result) {
+
+  console.log("post new event " + request.body);
+
+  eventsRequests.fullInsertEvent({id:request.body.id, title:request.body.title, place:request.body.place, date:request.body.date, status:request.body.status}, { participants:request.body.participants})
+  .then( () => result.redirect("/events"));
+
+});
+
+
+// get modify and event
+app.get("/events/:id/edit", function(request, result) {
+
+  eventsRequests.getEvent(request.params.id,
+    function(event, users){
+      result.render("eventEdit", {event: event, users:users, titre:"Modifier", route:"/events/"+request.params.id+"/edit"});
+    }
+  )
+})
+
+// post modify event
+app.post("/events/:id/edit", function(request, result) {
+
+  // console.log(request.body);
+  const event = {
+    id:request.body.id,
+    title:request.body.title,
+    place:request.body.place,
+    date:request.body.date,
+    status:request.body.status};
+
+  const participants = {
+    participants:request.body.participants
+  };
+
+  eventsRequests.fullUpdateEvent(event, participants)
+  .then(() => result.redirect("/events"));
+
+});
+
 
 
 passport.serializeUser(function(user, callback) {

@@ -15,7 +15,7 @@ function getAllEvents( callback ){
       if (error) {
         callback({"error":"erreur , dommage !"});
       } else {
-        console.log(  resultQuery.rows );
+        // console.log(  resultQuery.rows );
         callback(resultQuery.rows);
       }
     }
@@ -25,6 +25,7 @@ function getAllEvents( callback ){
 
 
 // retrieve 1 event
+/*
 function getEvent( id, callback ){
 
   const client = new PG.Client();
@@ -45,70 +46,127 @@ function getEvent( id, callback ){
 
   );
 }
+*/
 
-// insert events
-function insertEvent( event, callback ){
+
+function getEvent( id, callback ){
 
   const client = new PG.Client();
   client.connect();
   client.query(
-    "INSERT INTO events (title, date, place, id_owner, status) VALUES ($1,$2,$3,$4,$5)",
-    [event.title, event.date, event.place, '404f2252-e3a3-45fe-8c02-545475ebf37d', event.status],
-
-    function(error, resultQuery){
+    "SELECT id, title, place, status, to_char(date, 'YYYY-MM-DD') as date FROM events where id = $1",
+    [id],
+  )
+  .then(event => {
+    return client.query(
+      "SELECT users.id as id_user, users.first_name, participants.id as id_participant FROM users left join participants on participants.id_user = users.id and participants.id_event = $1",
+    [id],)
+    .then(users => {
       client.end();
-      if (error) {
-        console.log ('je suis dans insertEvent' + event + error);
-      } else {
-        console.log(  resultQuery.rows );
-        callback();
-      }
-    }
+      console.log(event.rows);
+      console.log(users.rows);
+      callback(event.rows[0], users.rows);
+    })
+  })
+  .catch(error => console.log(error))
+}
 
-  );
+
+// insert events
+function insertEvent( event ){
+
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    "INSERT INTO events (title, date, place, id_owner, status) VALUES ($1,$2,$3,$4,$5) RETURNING id",
+    [event.title, event.date, event.place, '404f2252-e3a3-45fe-8c02-545475ebf37d', event.status])
+    .then( (result) => {
+      client.end();
+      const ev = { id: result.rows[0].id};
+      return ev;
+    })
+
+
+}
+
+function fullInsertEvent(event, liste_participants){
+
+  console.log(event);
+  console.log(liste_participants);
+
+  return insertEvent(event)
+    .then((insertedEvent) => addParticipants(liste_participants, insertedEvent));
+
+}
+
+function fullUpdateEvent(event, liste_participants){
+
+  console.log(event);
+  console.log(liste_participants);
+
+  return updateEvent(event)
+    .then(removeParticipants)
+    .then(() => addParticipants(liste_participants, event));
+
 }
 
 // update event
-function updateEvent( event, callback ){
+function updateEvent( event ){
 
   const client = new PG.Client();
   client.connect();
-  client.query(
+  return client.query(
     "UPDATE events SET title=$1, date=$2, place=$3, status = $4 WHERE id = $5",
-    [event.title, event.date, event.place,  event.status, event.id],
+    [event.title, event.date, event.place,  event.status, event.id])
 
-    function(error, resultQuery){
-      client.end();
-      if (error) {
-        console.log ('je suis dans updateEvent' + event + error);
-      } else {
-        console.log(  resultQuery.rows );
-        callback();
-      }
-    }
+    .then( () => client.end() )
+    .then( () => event.id)
 
-  );
+}
+
+// remove all the participants of 1 event
+function removeParticipants (id_event){
+console.log ("je supprime pour id " + id_event);
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    "DELETE FROM participants where id_event = $1",
+    [id_event]
+  )
+  .then( () => client.end() )
+  .catch(error => console.log(error))
+
 }
 
 // add participant
-function addParticipant( first_name, id_event, callback ){
-console.log('firstname = '+first_name);
+function addParticipants( liste_participants, event ){
+  if (liste_participants.participants === undefined) {
+    return;
+  }
+  console.log("TOTO event.id = "+event.id);
+  console.log("longueur participants = " + liste_participants.participants.length);
+  let request = "insert into participants (id_user, id_event) values ";
+
+  let values = [];
+  for (let i = 0; i < liste_participants.participants.length ; i++){
+    values[i] = "('" + liste_participants.participants[i] + "','" + event.id + "')";
+    console.log("value = " + values[i]);
+    console.log('TOTO');
+  }
+
+  request = request + values.join(",") + ";";
+  console.log("request = " + request);
+
   const client = new PG.Client();
   client.connect();
-  client.query(
-    "INSERT INTO users (first_name) VALUES ($1) RETURNING *",
-    [first_name]
-  ).then(resultQuery => {
-    console.log(resultQuery.rows[0].id + "/" + id_event);
-    return client.query(
-      "INSERT INTO participants(id_user, id_event) VALUES ($1,$2) RETURNING *",
-      [resultQuery.rows[0].id ,id_event])
-  })
-  .then(participant => {
-    client.end();
-    callback();
-  })
+  return client.query(
+    request,
+    []
+  )
+  .then( () => client.end() )
   .catch(error => console.log(error))
+
+
 }
 
 
@@ -118,7 +176,6 @@ console.log('firstname = '+first_name);
 module.exports = {
   getAllEvents : getAllEvents,
   getEvent : getEvent,
-  insertEvent : insertEvent,
-  updateEvent : updateEvent,
-  addParticipant : addParticipant
+  fullUpdateEvent : fullUpdateEvent,
+  fullInsertEvent : fullInsertEvent
 };
