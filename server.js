@@ -14,6 +14,9 @@ client.connect();
 const port = process.env.PORT || 3000;
 const app = express();
 
+const eventsRequests = require ('./requests/eventsRequests.js');
+
+
 app.use(require("body-parser").urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
 app.use(
@@ -158,7 +161,10 @@ app.get("/events", function(request, result) {
 
 
 // GET new event
-app.get("/events/new", function(request, result) {
+app.get("/events/new",
+
+
+  function(request, result) {
 
   eventsRequests.getEvent(request.params.id,
     function(event, users){
@@ -167,12 +173,20 @@ app.get("/events/new", function(request, result) {
   )
 });
 
+
+
+
+
+
 // post new event
-app.post("/events/new", function(request, result) {
+app.post("/events/new",
 
-  console.log("post new event " + request.body);
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  function(request, result) {
 
-  eventsRequests.fullInsertEvent({id:request.body.id, title:request.body.title, place:request.body.place, date:request.body.date, status:request.body.status}, { participants:request.body.participants})
+  // console.log("post new event " + request.body);
+
+  eventsRequests.fullInsertEvent({id:request.body.id, title:request.body.title, place:request.body.place, date:request.body.date, status:request.body.status}, { participants:request.body.participants}, request.user)
   .then( () => result.redirect("/events"));
 
 });
