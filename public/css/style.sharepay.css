@@ -37,6 +37,11 @@ body, html {
   height: auto;
   margin-top: -150px;
 }
+.logoregister {
+  margin: 0 auto;
+  height: auto;
+  margin-top: -9%;
+}
 
 .header-page {
   background-color:#212121;
@@ -55,7 +60,9 @@ body, html {
   transform: translate(-50%,-50%);
   align-items: center;
   padding-top: 15px;
+  box-shadow: -7px 7px 10px #000;
 }
+
 .loginTitle {
 margin-bottom: 30px;
 text-transform: uppercase;
