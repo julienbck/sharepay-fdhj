@@ -121,13 +121,15 @@ app.get(
   }
 );
 
+app.get("/spendings", function(request, result) {
+  result.render("spendings")
+});
+
+
 app.get("/login", function(request, result) {
   result.render("login")
 });
 
-// app.post(
-//   "/login", passport.authenticate('local', { successRedirect: "/profile", failureRedirect: "/login" })
-// );
 app.get("/register", function(request, result) {
   result.render("register");
 });
@@ -135,12 +137,15 @@ app.get("/register", function(request, result) {
 app.post("/register",
  function(request, result) {
   const user = request.body;
+  //console.log(request.body);
   client.query("SELECT email FROM users")
   .then(dbResult => {
     if (!dbResult.rows.some(u => u.email === user.username)) {
-      client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')]);
+      client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')])
+      result.redirect("/login");
+    } else {
+      result.render("register", {error : true})
     }
-    result.redirect("/login");
   })
   .catch(error => {
     console.warn(error);
