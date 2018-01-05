@@ -4,6 +4,7 @@ const fetch = require("node-fetch");
 const passport = require("passport");
 const shajs = require('sha.js');
 const loginRequests = require('./requests/loginRequests.js');
+const newExpenseRequest = require('./requests/newExpenseRequest.js');
 const LocalStrategy = require("passport-local").Strategy;
 const pg = require("pg");
 const FacebookStrategy = require("passport-facebook").Strategy;
@@ -131,7 +132,6 @@ app.get("/register", function(request, result) {
 app.post("/register",
  function(request, result) {
   const user = request.body;
-  //console.log(request.body);
   client.query("SELECT email FROM users")
   .then(dbResult => {
     if (!dbResult.rows.some(u => u.email === user.username)) {
@@ -156,19 +156,32 @@ app.post(
   "/login",
   passport.authenticate("local", { failureRedirect: "/login" }),
   function(request, result) {
-    console.log("redirect to /profile");
     result.redirect("/profile");
   }
 );
+
+app.get("/events/:id", function(request, result) {
+  newExpenseRequest.getAllUsersForEventId(request.params.id)
+  .then (elements => {
+    result.render("newExpenseRequest", {elements:elements.rows});
+  }
+)
+});
+
+app.post("/events/:id", function(request, result){
+  const input = request.body;
+  console.log(input);
+  result.redirect("/");
+});
 
 app.get(
   "/profile",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    //console.log("toto", request.user)
     result.render("profile", {
       id: request.user.id,
-      email: request.user.email
+      email: request.user.email,
+      firstname: request.user.first_name
     });
   }
 );
