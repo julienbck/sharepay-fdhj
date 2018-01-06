@@ -149,7 +149,10 @@ app.post("/register",
 });
 
 // liste des evenements
-app.get("/events", function(request, result) {
+app.get("/events",
+
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
 
   eventsRequests.getAllEvents(
     function(events){
@@ -163,7 +166,7 @@ app.get("/events", function(request, result) {
 // GET new event
 app.get("/events/new",
 
-
+  require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
 
   eventsRequests.getEvent(request.params.id,
@@ -193,7 +196,10 @@ app.post("/events/new",
 
 
 // get modify and event
-app.get("/events/:id/edit", function(request, result) {
+app.get("/events/:id/edit",
+
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
 
   eventsRequests.getEvent(request.params.id,
     function(event, users){
@@ -203,7 +209,10 @@ app.get("/events/:id/edit", function(request, result) {
 })
 
 // post modify event
-app.post("/events/:id/edit", function(request, result) {
+app.post("/events/:id/edit",
+
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
 
   // console.log(request.body);
   const event = {
