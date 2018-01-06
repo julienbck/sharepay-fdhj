@@ -217,7 +217,7 @@ app.get("/events/:id/edit",
 // post modify event
 app.post("/events/:id/edit",
 
-  require("connect-ensure-login").ensureLoggedIn("/login"),
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
 
   // console.log(request.body);
