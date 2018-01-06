@@ -1,10 +1,10 @@
 {% extends "layout.njk" %}
 {% block titlePage %}
-  Creating a new expense : {{elements[0].title}}
+  Creating a new expense : {{title}}
 {% endblock %}
 
 {% block content %}
-<form class="" action="/events/:id" method="post">
+<form class="" action="/{{ route }}" method="post">
 <div class="container">
 
   <div class="row">
@@ -27,11 +27,9 @@
       <div class="expenseform-group">
         <label for="expenseDescription">Who benefits?</label>
         <br>
-        <FORM NAME="eventMate" method="POST">
             {% for element in elements%}
             <INPUT TYPE="CHECKBOX" NAME=recipient VALUE={{element.first_name}}> {{element.first_name}} {{element.last_name}} <BR>
             {%endfor%}
-        </FORM>
       </div>
     </div>
 </div>

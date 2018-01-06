@@ -264,23 +264,28 @@ app.post(
   }
 );
 
+
+//new Expenses
 app.get("/events/:id/spendings/new",
 require("connect-ensure-login").ensureLoggedIn("/"),
 function(request, result) {
+  client.connect();
   newExpenseRequest.getAllUsersForEventId(request.params.id)
   .then (elements => {
-    console.log(elements.rows)
-    result.render("newExpenseRequest", {elements: elements.rows});
+    result.render("newExpenseRequest", {elements: elements.rows, id_event: request.params.id, title:"Créer une depense", route:`events/${request.params.id}/spendings/new` });
   }
 )
 });
 
+
 app.post("/events/:id/spendings/new",
 require("connect-ensure-login").ensureLoggedIn("/"),
  function(request, result){
-  const input = request.body;
-  console.log(input);
-  result.redirect("/events");
+   console.log(request.body.recipient);
+   newExpenseRequest.insertNewExpenseForEventIdInSpendings(request)
+   .then(elements => {
+     result.render("events")
+     })
 });
 
 app.get("/events/:id/spendings/list",
