@@ -15,6 +15,9 @@ client.connect();
 const port = process.env.PORT || 3000;
 const app = express();
 
+const eventsRequests = require ('./requests/eventsRequests.js');
+
+
 app.use(require("body-parser").urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
 app.use(
@@ -145,6 +148,85 @@ app.post("/register",
   });
 });
 
+// liste des evenements
+app.get("/events", function(request, result) {
+
+  eventsRequests.getAllEvents(
+    function(events){
+      result.render("events", {events: events })
+    }
+  );
+
+});
+
+
+// GET new event
+app.get("/events/new",
+
+
+  function(request, result) {
+
+  eventsRequests.getEvent(request.params.id,
+    function(event, users){
+      result.render("eventEdit", {event: event, users:users, titre:"Créer", route:"/events/new"})
+    }
+  )
+});
+
+
+
+
+
+
+// post new event
+app.post("/events/new",
+
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  function(request, result) {
+
+  // console.log("post new event " + request.body);
+
+  eventsRequests.fullInsertEvent({id:request.body.id, title:request.body.title, place:request.body.place, date:request.body.date, status:request.body.status}, { participants:request.body.participants}, request.user)
+  .then( () => result.redirect("/events"));
+
+});
+
+
+// get modify and event
+app.get("/events/:id/edit", function(request, result) {
+
+  eventsRequests.getEvent(request.params.id,
+    function(event, users){
+      result.render("eventEdit", {event: event, users:users, titre:"Modifier", route:"/events/"+request.params.id+"/edit"});
+    }
+  )
+})
+
+// post modify event
+app.post("/events/:id/edit", function(request, result) {
+
+  // console.log(request.body);
+  const event = {
+    id:request.body.id,
+    title:request.body.title,
+    place:request.body.place,
+    date:request.body.date,
+    status:request.body.status};
+
+  const participants = {
+    participants:request.body.participants
+  };
+
+  eventsRequests.fullUpdateEvent(event, participants)
+  .then(() => result.redirect("/events"));
+
+});
+
+
+
+passport.serializeUser(function(user, callback) {
+  return callback(null, user);
+});
 
 
 app.get("/events", function(request, result) {
