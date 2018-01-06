@@ -133,17 +133,17 @@ app.get("/register", function(request, result) {
 });
 
 
-
 app.post("/register",
  function(request, result) {
+  client.connect();
   const user = request.body;
   //console.log(request.body);
   client.query("SELECT email FROM users")
   .then(dbResult => {
     if (!dbResult.rows.some(u => u.email === user.username)) {
       client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')])
-      result.render("login", {success : true})
-      client.end()
+      client.end();
+      result.redirect("/login")
     } else {
       result.render("register", {error : true})
     }
@@ -158,7 +158,7 @@ app.post("/register",
 // liste des evenements
 app.get("/events",
 
-  require("connect-ensure-login").ensureLoggedIn("/login"),
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
 
   eventsRequests.getAllEvents(
@@ -190,7 +190,6 @@ app.get("/events/new",
 
 // post new event
 app.post("/events/new",
-
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
 
@@ -245,34 +244,32 @@ passport.serializeUser(function(user, callback) {
 });
 
 
-app.get("/events", function(request, result) {
-  result.render("events")
-});
 
 
 app.post(
   "/login",
   passport.authenticate("local", { failureRedirect: "/login" }),
   function(request, result) {
-    result.redirect("/profile");
+    result.redirect("/events");
   }
 );
 
-app.get("/events/:id", function(request, result) {
+app.get("/events/:id/spendings/new", function(request, result) {
   newExpenseRequest.getAllUsersForEventId(request.params.id)
   .then (elements => {
-    result.render("newExpenseRequest", {elements:elements.rows});
+    console.log(elements.rows)
+    result.render("newExpenseRequest", {elements: elements.rows});
   }
 )
 });
 
-app.post("/events/:id", function(request, result){
+app.post("/events/:id/spendings/new", function(request, result){
   const input = request.body;
   console.log(input);
-  result.redirect("/");
+  result.redirect("/events");
 });
 
-app.get("/events/:id/spendings",
+app.get("/events/:id/spendings/list",
 function(request, result) {
   spendingsRequests.getAllSpendingForEventID(request.params.id)
   .then(elements => {
