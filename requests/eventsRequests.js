@@ -7,7 +7,7 @@ function getAllEvents( callback ){
   const client = new PG.Client();
   client.connect();
   client.query(
-    "SELECT title_event, to_char(date,'DD/MM/YYYY') as date, place, status, id FROM events",
+    "SELECT title, to_char(date,'DD/MM/YYYY') as date, place, status, id FROM events",
     [],
 
     function(error, resultQuery){
@@ -54,7 +54,7 @@ function getEvent( id, callback ){
   const client = new PG.Client();
   client.connect();
   client.query(
-    "SELECT id, title_event, place, status, to_char(date_event, 'YYYY-MM-DD') as date FROM events where id = $1",
+    "SELECT id, title, place, status, to_char(date, 'YYYY-MM-DD') as date FROM events where id = $1",
     [id],
   )
   .then(event => {
@@ -79,7 +79,7 @@ function insertEvent( event, user ){
   const client = new PG.Client();
   client.connect();
   return client.query(
-    "INSERT INTO events (title_event, date_event, place, id_owner, status) VALUES ($1,$2,$3,$4,$5) RETURNING id",
+    "INSERT INTO events (title, date, place, id_owner, status) VALUES ($1,$2,$3,$4,$5) RETURNING id",
     // [event.title, event.date, event.place, '404f2252-e3a3-45fe-8c02-545475ebf37d', event.status])
     [event.title, event.date, event.place, user.id, event.status])
     .then( (result) => {
@@ -128,13 +128,13 @@ function updateEvent( event ){
 }
 
 // remove all the participants of 1 event
-function removeParticipants (id_event){
-console.log ("je supprime pour id " + id_event);
+function removeParticipants (id){
+console.log ("je supprime pour id " + id);
   const client = new PG.Client();
   client.connect();
   return client.query(
     "DELETE FROM participants where id_event = $1",
-    [id_event]
+    [id]
   )
   .then( () => client.end() )
   .catch(error => console.log(error))

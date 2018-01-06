@@ -1,5 +1,5 @@
 {% extends "layout.njk" %}
-{% block titlePage %}SPENDINGS TO EVENTS {{elements[0].title}}{% endblock %}
+{% block titlePage %}SPENDINGS TO EVENTS @to do{% endblock %}
 {% block content %}
 <table class="table table-striped table-bordered table-sm">
   <thead class="thead-dark">
@@ -13,7 +13,7 @@
   <tbody>
     {% for element in elements %}
     <tr>
-      <th scope="row">{{element.title}}</th>
+      <th scope="row">{{element.description}}</th>
       <td>{{element.first_name}} {{element.last_name}}</td>
       <td>{{element.amount / 100}}</td>
       <td>{{element.date}}</td>
@@ -22,7 +22,7 @@
   </tbody>
 </table>
 
-<button type="button" onclick="window.location='/events/{{elements[0].id_event}}/spendings/new'" class="btn-login-design text-blue" style="float:right">
+<button type="button" onclick="window.location='/events/{{id_event}}/spendings/new'" class="btn-login-design text-blue" style="float:right">
   <a class="boldUppercase">A</a>dd <a class="boldUppercase">S</a>pending
 </button>
 

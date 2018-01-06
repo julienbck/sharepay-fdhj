@@ -142,7 +142,6 @@ app.post("/register",
   .then(dbResult => {
     if (!dbResult.rows.some(u => u.email === user.username)) {
       client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')])
-      client.end();
       result.redirect("/login")
     } else {
       result.render("register", {error : true})
@@ -254,7 +253,9 @@ app.post(
   }
 );
 
-app.get("/events/:id/spendings/new", function(request, result) {
+app.get("/events/:id/spendings/new",
+require("connect-ensure-login").ensureLoggedIn("/"),
+function(request, result) {
   newExpenseRequest.getAllUsersForEventId(request.params.id)
   .then (elements => {
     console.log(elements.rows)
@@ -263,17 +264,20 @@ app.get("/events/:id/spendings/new", function(request, result) {
 )
 });
 
-app.post("/events/:id/spendings/new", function(request, result){
+app.post("/events/:id/spendings/new",
+require("connect-ensure-login").ensureLoggedIn("/"),
+ function(request, result){
   const input = request.body;
   console.log(input);
   result.redirect("/events");
 });
 
 app.get("/events/:id/spendings/list",
+require("connect-ensure-login").ensureLoggedIn("/"),
 function(request, result) {
   spendingsRequests.getAllSpendingForEventID(request.params.id)
   .then(elements => {
-  result.render("spendings", {elements: elements.rows})
+  result.render("spendings", {elements: elements.rows, id_event : request.params.id} )
   })
 });
 
