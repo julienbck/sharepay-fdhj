@@ -33,7 +33,7 @@
     {% for event in events %}
     <tr>
       <td>
-        {{ event.title_event }}
+        {{ event.title}}
       </td>
       <td>
         {{ event.place }}
@@ -48,7 +48,7 @@
         <a href="/events/{{ event.id }}/edit" class="btn btn-block btn-primary btn-sm">Modifier</a>
       </td>
       <td>
-        <a href="/events/{{ event.id }}/spendings/list" class="btn btn-block btn-success btn-sm">Dépenses</a>
+        <a href="/events/{{event.id}}/spendings/list" class="btn btn-block btn-success btn-sm">Dépenses</a>
       </td>
     </tr>
     {% endfor %}

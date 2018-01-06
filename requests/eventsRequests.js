@@ -128,13 +128,13 @@ function updateEvent( event ){
 }
 
 // remove all the participants of 1 event
-function removeParticipants (id_event){
-console.log ("je supprime pour id " + id_event);
+function removeParticipants (id){
+console.log ("je supprime pour id " + id);
   const client = new PG.Client();
   client.connect();
   return client.query(
     "DELETE FROM participants where id_event = $1",
-    [id_event]
+    [id]
   )
   .then( () => client.end() )
   .catch(error => console.log(error))
