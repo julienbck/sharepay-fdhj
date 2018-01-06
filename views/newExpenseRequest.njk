@@ -26,6 +26,7 @@
     <div class="col">
       <div class="expenseform-group">
         <label for="expenseDescription">Who benefits?</label>
+        <br>
         <FORM NAME="eventMate" method="POST">
             {% for element in elements%}
             <INPUT TYPE="CHECKBOX" NAME=recipient VALUE={{element.first_name}}> {{element.first_name}} {{element.last_name}} <BR>
@@ -34,6 +35,7 @@
       </div>
     </div>
 </div>
+<br>
 <button type="submit" class="btn btn-primary">Submit</button>
 </div>
 </form>
