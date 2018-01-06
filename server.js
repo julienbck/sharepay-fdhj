@@ -4,18 +4,26 @@ const fetch = require("node-fetch");
 const passport = require("passport");
 const shajs = require('sha.js');
 const loginRequests = require('./requests/loginRequests.js');
+<<<<<<< HEAD
 const newExpenseRequest = require('./requests/newExpenseRequest.js');
+=======
+const spendingsRequests = require('./requests/spendingRequests.js');
+>>>>>>> SpendingList Final
 const LocalStrategy = require("passport-local").Strategy;
 const pg = require("pg");
 const FacebookStrategy = require("passport-facebook").Strategy;
 const FB = require("fb");
 const client = new pg.Client();
-client.connect();
 
 const port = process.env.PORT || 3000;
 const app = express();
 
+<<<<<<< HEAD
 const eventsRequests = require ('./requests/eventsRequests.js');
+=======
+
+client.connect();
+>>>>>>> SpendingList Final
 
 
 app.use(require("body-parser").urlencoded({ extended: true }));
@@ -121,9 +129,7 @@ app.get(
   }
 );
 
-app.get("/spendings", function(request, result) {
-  result.render("spendings")
-});
+
 
 
 app.get("/login", function(request, result) {
@@ -134,6 +140,8 @@ app.get("/register", function(request, result) {
   result.render("register");
 });
 
+
+
 app.post("/register",
  function(request, result) {
   const user = request.body;
@@ -142,7 +150,8 @@ app.post("/register",
   .then(dbResult => {
     if (!dbResult.rows.some(u => u.email === user.username)) {
       client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')])
-      result.redirect("/login");
+      result.render("login", {success : true})
+      client.end()
     } else {
       result.render("register", {error : true})
     }
@@ -151,6 +160,7 @@ app.post("/register",
     console.warn(error);
     result.redirect("/register");
   });
+
 });
 
 // liste des evenements
@@ -268,6 +278,14 @@ app.post("/events/:id", function(request, result){
   const input = request.body;
   console.log(input);
   result.redirect("/");
+});
+
+app.get("/events/:id/spendings",
+function(request, result) {
+  spendingsRequests.getAllSpendingForEventID(request.params.id)
+  .then(elements => {
+  result.render("spendings", {elements: elements.rows})
+  })
 });
 
 app.get(
