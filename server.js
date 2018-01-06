@@ -168,6 +168,15 @@ app.get("/events",
 
 });
 
+// get balance
+app.get("/events/:id/balance",
+
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+
+  result.render("balance");
+
+})
 
 // GET new event
 app.get("/events/new",
