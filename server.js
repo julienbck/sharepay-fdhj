@@ -4,27 +4,19 @@ const fetch = require("node-fetch");
 const passport = require("passport");
 const shajs = require('sha.js');
 const loginRequests = require('./requests/loginRequests.js');
-<<<<<<< HEAD
 const newExpenseRequest = require('./requests/newExpenseRequest.js');
-=======
 const spendingsRequests = require('./requests/spendingRequests.js');
->>>>>>> SpendingList Final
+const eventsRequests = require ('./requests/eventsRequests.js');
+
 const LocalStrategy = require("passport-local").Strategy;
-const pg = require("pg");
 const FacebookStrategy = require("passport-facebook").Strategy;
+
+const pg = require("pg");
 const FB = require("fb");
 const client = new pg.Client();
 
 const port = process.env.PORT || 3000;
 const app = express();
-
-<<<<<<< HEAD
-const eventsRequests = require ('./requests/eventsRequests.js');
-=======
-
-client.connect();
->>>>>>> SpendingList Final
-
 
 app.use(require("body-parser").urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
