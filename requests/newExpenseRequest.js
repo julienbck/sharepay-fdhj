@@ -28,6 +28,7 @@ function getAllUsersForEventId(id) {
     [id]
   )
   .then(response => {
+    console.log(response);
     client.end();
     return response;
   });

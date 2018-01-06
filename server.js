@@ -5,18 +5,18 @@ const passport = require("passport");
 const shajs = require('sha.js');
 const loginRequests = require('./requests/loginRequests.js');
 const newExpenseRequest = require('./requests/newExpenseRequest.js');
+const spendingsRequests = require('./requests/spendingRequests.js');
+const eventsRequests = require ('./requests/eventsRequests.js');
+
 const LocalStrategy = require("passport-local").Strategy;
-const pg = require("pg");
 const FacebookStrategy = require("passport-facebook").Strategy;
+
+const pg = require("pg");
 const FB = require("fb");
 const client = new pg.Client();
-client.connect();
 
 const port = process.env.PORT || 3000;
 const app = express();
-
-const eventsRequests = require ('./requests/eventsRequests.js');
-
 
 app.use(require("body-parser").urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
@@ -121,37 +121,44 @@ app.get(
   }
 );
 
+
+
+
 app.get("/login", function(request, result) {
   result.render("login")
 });
 
-// app.post(
-//   "/login", passport.authenticate('local', { successRedirect: "/profile", failureRedirect: "/login" })
-// );
 app.get("/register", function(request, result) {
   result.render("register");
 });
 
+
 app.post("/register",
  function(request, result) {
+  client.connect();
   const user = request.body;
+  //console.log(request.body);
   client.query("SELECT email FROM users")
   .then(dbResult => {
     if (!dbResult.rows.some(u => u.email === user.username)) {
-      client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')]);
+      client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')])
+      client.end();
+      result.redirect("/login")
+    } else {
+      result.render("register", {error : true})
     }
-    result.redirect("/login");
   })
   .catch(error => {
     console.warn(error);
     result.redirect("/register");
   });
+
 });
 
 // liste des evenements
 app.get("/events",
 
-  require("connect-ensure-login").ensureLoggedIn("/login"),
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
 
   eventsRequests.getAllEvents(
@@ -183,7 +190,6 @@ app.get("/events/new",
 
 // post new event
 app.post("/events/new",
-
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
 
@@ -211,7 +217,7 @@ app.get("/events/:id/edit",
 // post modify event
 app.post("/events/:id/edit",
 
-  require("connect-ensure-login").ensureLoggedIn("/login"),
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
 
   // console.log(request.body);
@@ -238,31 +244,37 @@ passport.serializeUser(function(user, callback) {
 });
 
 
-app.get("/events", function(request, result) {
-  result.render("events")
-});
 
 
 app.post(
   "/login",
   passport.authenticate("local", { failureRedirect: "/login" }),
   function(request, result) {
-    result.redirect("/profile");
+    result.redirect("/events");
   }
 );
 
-app.get("/events/:id", function(request, result) {
+app.get("/events/:id/spendings/new", function(request, result) {
   newExpenseRequest.getAllUsersForEventId(request.params.id)
   .then (elements => {
-    result.render("newExpenseRequest", {elements:elements.rows});
+    console.log(elements.rows)
+    result.render("newExpenseRequest", {elements: elements.rows});
   }
 )
 });
 
-app.post("/events/:id", function(request, result){
+app.post("/events/:id/spendings/new", function(request, result){
   const input = request.body;
   console.log(input);
-  result.redirect("/");
+  result.redirect("/events");
+});
+
+app.get("/events/:id/spendings/list",
+function(request, result) {
+  spendingsRequests.getAllSpendingForEventID(request.params.id)
+  .then(elements => {
+  result.render("spendings", {elements: elements.rows})
+  })
 });
 
 app.get(
