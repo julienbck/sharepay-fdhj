@@ -70,7 +70,16 @@ color: white;
 text-align: center;
 }
 
+.myform-group {
+  text-transform: uppercase;
+  color: white;
+}
 
+
+.expenseform-group{
+    text-transform: uppercase;
+    margin-top: 5rem;
+}
 
 .eventsList {
   margin : 10px;
