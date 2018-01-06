@@ -24,10 +24,11 @@ function getAllUsersForEventId(id) {
   const client = new pg.Client();
   client.connect();
   return client.query(
-    "SELECT * FROM participants FULL JOIN events on participants.id_event = events.id FULL JOIN users on participants.id_user = users.id WHERE participants.id_event=$1",
+    "SELECT * FROM participants FULL JOIN events on participants.id = events.id FULL JOIN users on participants.id_user = users.id WHERE participants.id=$1",
     [id]
   )
   .then(response => {
+    console.log(response);
     client.end();
     return response;
   });
