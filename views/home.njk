@@ -10,23 +10,22 @@
        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   </head>
-  <body class="background-login">
-{% block content %}
+<body class="background-authenticate-page">
+  <div class="container-login-chosse">
   <div class="logoLogin text-center">
-    <img src="image/LogoSharePayFondTransBlack.png"/>
+      <img src="image/LogoSharePayFondTransBlack.png"/>
   </div>
-  <div class="button-container">
-    <h5 class="text-center text-white" style="text-transform: uppercase">Choose your authentication</h5>
-  <div class="btn-group-vertical">
-    <button type="button" onclick="window.location='/auth/facebook'"class="btn-login-design text-blue"><i class="fa fa-facebook" aria-hidden="true" style="font-size: 30px"></i>acebook Login
-    </button></a>
-    <button type="button" onclick="window.location='/login'" class="btn-login-design text-blue"><a href="/login"><a class="boldUppercase">S</a>hare <a class="boldUppercase">P</a>ay <a class="boldUppercase">L</a>ogin
-    </a></button>
-    <button type="button" onclick="window.location='/register'" class="btn-login-design text-blue"><a class="boldUppercase">C</a>reate <a class="boldUppercase">A</a>n <a class="boldUppercase">A</a>ccount
-    </button>
+  <div class="button-container text-center">
+      <h5 class="text-center text-white" style="text-transform: uppercase">Choose your authentication</h5>
+    <div class="btn-group-vertical">
+      <button type="button" onclick="window.location='/auth/facebook'"class="btn-login-design text-blue mb-3"><i class="fa fa-facebook" aria-hidden="true" style="font-size: 30px"></i>acebook Login
+      </button></a>
+      <button type="button" onclick="window.location='/login'" class="btn-login-design text-blue mb-3"><a href="/login"><a class="boldUppercase">S</a>hare <a class="boldUppercase">P</a>ay <a class="boldUppercase">L</a>ogin
+      </a></button>
+      <button type="button" onclick="window.location='/register'" class="btn-login-design text-blue"><a class="boldUppercase">C</a>reate <a class="boldUppercase">A</a>n <a class="boldUppercase">A</a>ccount
+      </button>
+    </div>
   </div>
-</div>
-</div>
-{% endblock %}
+  </div>
 </body>
 </html>

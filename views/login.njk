@@ -10,30 +10,25 @@
        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   </head>
-  <body class="background-login">
-{% block content %}
-  <div class="logoLogin text-center">
-    <img src="image/LogoSharePayFondTransBlack.png"/>
+  <body class="background-authenticate-page">
+      <div class="container-login-chosse">
+  <div class="logoLogin">
+    <img src="image/LogoSharePayFondTransBlack.png" width="100%"/>
   </div>
-  <div class="container">
-    <div class="jumbotron">
+    <div class="login-container">
       <h3 class="loginTitle">Connection</h3>
-          <form action="/login" method="POST">
+          <form action="/login" method="POST" class="mx-2">
             <div class="myform-group">
               <label for="username" class="text-white">Email address:</label>
-              <input type="text" class="form-control" name="username">
+              <input type="text" class="form-control-design mb-2" name="username">
             </div>
             <div class="myform-group">
               <label for="password" cmass="text-white">Password:</label>
-              <input type="password" class="form-control" name="password">
+              <input type="password" class="form-control-design" name="password">
             </div>
-            {% if success %}<a class="text-white">You are sign </a>{% endif%}
-            <button type="submit" class="btn btn-default" style="float:right; margin-top: 20px">Login</button>
+            <button type="submit" class="btn-login-design text-blue" style="width:100px; float:right; margin-top: 20px">Login</button>
           </form>
-
-    </div>
-
-  </div>
-{% endblock %}
+        </div>
+      </div>
 </body>
 </html>

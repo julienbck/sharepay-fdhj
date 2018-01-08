@@ -7,48 +7,48 @@
 
 <div class="eventsList">
 
-<table class="table table-striped table-bordered table-sm">
+<table class="table-fill">
 
   <thead class="thead-dark">
     <tr>
-      <th>
+      <th class="text-center">
         Event
       </th>
-      <th>
+      <th class="text-center">
         Place
       </th>
-      <th>
+      <th class="text-center">
         Date
       </th>
-      <th>
+      <th class="text-center">
         status
       </th>
-      <th colspan="3">
-        <a href="/events/new" class="btn btn-primary btn-sm">Ajouter</a>
+      <th class="text-center">
+        <a href="/events/new" class="btn btn-block btn-add-design btn-sm" styme="top: 50px">Ajouter</a>
       </th>
     </tr>
   </thead>
 
-  <tbody>
+  <tbody class="table-hover">
     {% for event in events %}
     <tr>
-      <td>
+      <td class="text-center">
         {{ event.title}}
       </td>
-      <td>
+      <td class="text-center">
         {{ event.place }}
       </td>
-      <td>
+      <td class="text-center">
         {{ event.date }}
       </td>
-      <td>
+      <td class="text-center">
         {{ event.status }}
       </td>
       <td>
-        <a href="/events/{{ event.id }}/edit" class="btn btn-block btn-primary btn-sm">Modifier</a>
+        <a href="/events/{{ event.id }}/edit" class="btn btn-block btn-table-design btn-sm btn-table-hover text-white-hover">Modifier</a>
       </td>
-      <td>
-        <a href="/events/{{event.id}}/spendings/list" class="btn btn-block btn-success btn-sm">Dépenses</a>
+      <td >
+        <a href="/events/{{event.id}}/spendings/list" class="btn btn-block btn-table-design btn-sm btn-table-hover text-white-hover">Dépenses</a>
       </td>
       <td>
         <a href="/events/{{event.id}}/balance" class="btn btn-block btn-info btn-sm">Balance</a>

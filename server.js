@@ -160,7 +160,6 @@ app.post("/register",
 // liste des evenements
 app.get("/events",
 
-  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
 
   eventsRequests.getAllEvents(
