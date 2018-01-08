@@ -28,7 +28,7 @@
         <label for="expenseDescription">Who benefits?</label>
         <br>
             {% for element in elements%}
-            <INPUT TYPE="CHECKBOX" NAME=recipient VALUE={{element.first_name}}> {{element.first_name}} {{element.last_name}} <BR>
+            <INPUT TYPE="CHECKBOX" NAME=recipient VALUE={{element.participantsid}}> {{element.first_name}} {{element.last_name}} <BR>
             {%endfor%}
       </div>
     </div>
@@ -37,27 +37,4 @@
 <button type="submit" class="btn btn-primary">Submit</button>
 </div>
 </form>
-
-
-
-
-
-{# <div>
-  <table class="table table-striped">
-<thead class="text-light bg-dark">
-  <tr>
-    <th scope="col-8">{{firstname}}</th>
-  </tr>
-</thead>
-<tbody>
-    {% for categorie in categories%}
-    <tr>
-      <td>{{categorie.label}}</a></td>
-    </tr>
-    {%endfor%}
-</tbody>
-</table>
-</div> #}
-
-
 {% endblock %}
