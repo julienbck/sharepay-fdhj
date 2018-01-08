@@ -36,7 +36,6 @@ function getAllUsersForEventId(id) {
 function insertNewExpenseForEventIdInSpendings(request){
   const participantWhoBenefitsArray = request.body.recipient
   const client = new pg.Client();
-  //console.log(request.user.id);
   client.connect();
     return client.query(
       "select id from participants where id_event=$1 AND id_user=$2",
@@ -53,16 +52,13 @@ function insertNewExpenseForEventIdInSpendings(request){
 
     )
     client.end();
-    //console.log(response);
   });
 
 }
 
 function insertNewExpenseDetailForEventIdInRecipients(req, user, spending_id){
-  console.log(req);
   req.forEach(function(participant){
 
-    //console.log(participant);
     const client = new pg.Client();
     client.connect();
       return client.query(

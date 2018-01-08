@@ -137,16 +137,12 @@ app.post("/register",
  function(request, result) {
   client.connect();
   const user = request.body;
-  //console.log(request.body);
   client.query("SELECT email FROM users")
   .then(dbResult => {
     if (!dbResult.rows.some(u => u.email === user.username)) {
       client.query("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [user.firstname, user.lastname, user.username, shajs('sha256').update(user.password).digest('hex')])
-      .then( () => client.end() )
-      .then( () => result.redirect("/login") );
-
+      result.redirect("/login")
     } else {
-      client.end();
       result.render("register", {error : true})
     }
   })
@@ -160,6 +156,7 @@ app.post("/register",
 // liste des evenements
 app.get("/events",
 
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
 
   eventsRequests.getAllEvents(
@@ -170,15 +167,6 @@ app.get("/events",
 
 });
 
-// get balance
-app.get("/events/:id/balance",
-
-  require("connect-ensure-login").ensureLoggedIn("/login"),
-  function(request, result) {
-
-  result.render("balance");
-
-})
 
 // GET new event
 app.get("/events/new",
@@ -202,9 +190,6 @@ app.get("/events/new",
 app.post("/events/new",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-
-  // console.log("post new event " + request.body);
-
   eventsRequests.fullInsertEvent({id:request.body.id, title:request.body.title, place:request.body.place, date:request.body.date, status:request.body.status}, { participants:request.body.participants}, request.user)
   .then( () => result.redirect("/events"));
 
@@ -229,8 +214,6 @@ app.post("/events/:id/edit",
 
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-
-  // console.log(request.body);
   const event = {
     id:request.body.id,
     title:request.body.title,
@@ -272,7 +255,6 @@ function(request, result) {
   client.connect();
   newExpenseRequest.getAllUsersForEventId(request.params.id)
   .then (elements => {
-    console.log("je suis ici ==> ",elements.rows);
     result.render("newExpenseRequest", {elements: elements.rows, id_event: request.params.id, title:"Créer une depense", route:`events/${request.params.id}/spendings/new` });
   }
 )
@@ -282,7 +264,6 @@ function(request, result) {
 app.post("/events/:id/spendings/new",
 require("connect-ensure-login").ensureLoggedIn("/"),
  function(request, result){
-   //console.log(request.body.recipient);
    newExpenseRequest.insertNewExpenseForEventIdInSpendings(request)
    .then(elements => {
      result.render("events")
