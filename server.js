@@ -272,6 +272,7 @@ function(request, result) {
   client.connect();
   newExpenseRequest.getAllUsersForEventId(request.params.id)
   .then (elements => {
+    console.log("je suis ici ==> ",elements.rows);
     result.render("newExpenseRequest", {elements: elements.rows, id_event: request.params.id, title:"Créer une depense", route:`events/${request.params.id}/spendings/new` });
   }
 )
@@ -281,7 +282,7 @@ function(request, result) {
 app.post("/events/:id/spendings/new",
 require("connect-ensure-login").ensureLoggedIn("/"),
  function(request, result){
-   console.log(request.body.recipient);
+   //console.log(request.body.recipient);
    newExpenseRequest.insertNewExpenseForEventIdInSpendings(request)
    .then(elements => {
      result.render("events")
